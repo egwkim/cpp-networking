@@ -2,8 +2,6 @@
 
 #include <WinSock2.h>
 
-#define PORT 54322
-
 int main()
 {
     int iResult = 0;
@@ -35,24 +33,6 @@ int main()
     else
     {
         std::cout << "socket function succeeded" << std::endl;
-    }
-
-    // Bind the socket to specified server, port
-    sockaddr_in service;
-    service.sin_family = AF_INET;
-    service.sin_addr.s_addr = inet_addr("127.0.0.1");
-    service.sin_port = htons(PORT);
-    iResult = bind(connectSocket, (SOCKADDR *)&service, sizeof(service));
-    if (iResult == SOCKET_ERROR)
-    {
-        std::cout << "bind function failed with error: " << WSAGetLastError() << std::endl;
-        closesocket(connectSocket);
-        WSACleanup();
-        return 1;
-    }
-    else
-    {
-        std::cout << "bind function succeeded" << std::endl;
     }
 
     // Connect to the server
