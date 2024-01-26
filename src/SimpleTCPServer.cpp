@@ -2,7 +2,7 @@
 
 #include <WinSock2.h>
 
-#define PORT 54321
+#include "config.h"
 
 int main()
 {
@@ -43,7 +43,7 @@ int main()
     // sin_addr uses in_addr structure, which is a union.
     // s_addr is one of the three ways to access it.
     // https://learn.microsoft.com/en-us/windows/win32/api/winsock2/ns-winsock2-in_addr
-    service.sin_addr.s_addr = inet_addr("127.0.0.1");
+    service.sin_addr.s_addr = inet_addr(ADDRESS);
     service.sin_port = htons(PORT);
     iResult = bind(listenSocket, (SOCKADDR *)&service, sizeof(service));
     if (iResult == SOCKET_ERROR)

@@ -2,6 +2,8 @@
 
 #include <WinSock2.h>
 
+#include "config.h"
+
 int main()
 {
     int iResult = 0;
@@ -38,8 +40,8 @@ int main()
     // Connect to the server
     sockaddr_in clientService;
     clientService.sin_family = AF_INET;
-    clientService.sin_addr.s_addr = inet_addr("127.0.0.1");
-    clientService.sin_port = htons(54321);
+    clientService.sin_addr.s_addr = inet_addr(ADDRESS);
+    clientService.sin_port = htons(PORT);
     iResult = connect(connectSocket, (SOCKADDR *)&clientService, sizeof(clientService));
     if (iResult == SOCKET_ERROR)
     {
