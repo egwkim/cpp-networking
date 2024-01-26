@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 
 #include <WinSock2.h>
 
@@ -17,11 +18,8 @@ int main()
         std::cout << "WSAStartup function failed with error: " << iResult << std::endl;
         return 1;
     }
-    else
-    {
-        std::cout << "WSAStartup function succeeded\n";
-        std::cout << "Status: " << wsaData.szSystemStatus << std::endl;
-    }
+    std::cout << "WSAStartup function succeeded\n";
+    std::cout << "Status: " << wsaData.szSystemStatus << std::endl;
 
     // Create a socket
     SOCKET connectSocket;
@@ -32,10 +30,7 @@ int main()
         WSACleanup();
         return 1;
     }
-    else
-    {
-        std::cout << "socket function succeeded" << std::endl;
-    }
+    std::cout << "socket function succeeded" << std::endl;
 
     // Connect to the server
     sockaddr_in clientService;
@@ -50,10 +45,19 @@ int main()
         WSACleanup();
         return 1;
     }
-    else
+    std::cout << "connect function succeeded" << std::endl;
+
+    char buff[DEFAULT_BUFLEN];
+    iResult = recv(connectSocket, buff, DEFAULT_BUFLEN, 0);
+    if (iResult == SOCKET_ERROR)
     {
-        std::cout << "connect function succeeded" << std::endl;
+        std::cout << "connect function failed with error: " << WSAGetLastError() << std::endl;
+        closesocket(connectSocket);
+        WSACleanup();
+        return 1;
     }
+    std::cout << "recv function succeeded" << std::endl;
+    std::cout << buff;
 
     closesocket(connectSocket);
     WSACleanup();

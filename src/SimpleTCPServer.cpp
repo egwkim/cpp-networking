@@ -1,4 +1,6 @@
+#include <ctime>
 #include <iostream>
+#include <string>
 
 #include <WinSock2.h>
 
@@ -17,11 +19,8 @@ int main()
         std::cout << "WSAStartup function failed with error: " << iResult << std::endl;
         return 1;
     }
-    else
-    {
-        std::cout << "WSAStartup function succeeded\n";
-        std::cout << "Status: " << wsaData.szSystemStatus << std::endl;
-    }
+    std::cout << "WSAStartup function succeeded\n";
+    std::cout << "Status: " << wsaData.szSystemStatus << std::endl;
 
     // Create a socket
     SOCKET listenSocket;
@@ -32,10 +31,7 @@ int main()
         WSACleanup();
         return 1;
     }
-    else
-    {
-        std::cout << "socket function succeeded" << std::endl;
-    }
+    std::cout << "socket function succeeded" << std::endl;
 
     // Bind the socket to specified server, port
     sockaddr_in service;
@@ -53,10 +49,7 @@ int main()
         WSACleanup();
         return 1;
     }
-    else
-    {
-        std::cout << "bind function succeeded" << std::endl;
-    }
+    std::cout << "bind function succeeded" << std::endl;
 
     // Place the socket in listening state
     iResult = listen(listenSocket, 1);
@@ -67,10 +60,7 @@ int main()
         WSACleanup();
         return 1;
     }
-    else
-    {
-        std::cout << "listen function succeeded" << std::endl;
-    }
+    std::cout << "listen function succeeded" << std::endl;
 
     // Accept incoming connection
     SOCKET acceptSocket;
@@ -84,11 +74,30 @@ int main()
         WSACleanup();
         return 1;
     }
-    else
+    std::cout << "accept function succeded\n";
+    std::cout << inet_ntoa(clientAddr.sin_addr) << std::endl;
+
+    // ISO 8601 date and time with offset
+    std::time_t t = std::time(nullptr);
+    std::tm tm = *std::localtime(&t);
+    char buff[32];
+    std::strftime(buff, sizeof buff, "%FT%T%z", &tm);
+
+    std::string message;
+    message = message +
+              "Hello, world! Connected successfully.\n" +
+              "Current time is: " + std::string(buff) + "\n";
+
+    iResult = send(acceptSocket, message.c_str(), DEFAULT_BUFLEN, 0);
+    if (iResult == SOCKET_ERROR)
     {
-        std::cout << "accept function succeded\n";
-        std::cout << inet_ntoa(clientAddr.sin_addr) << std::endl;
+        std::cout << "accept function failed with error: " << WSAGetLastError() << std::endl;
+        closesocket(acceptSocket);
+        closesocket(listenSocket);
+        WSACleanup();
+        return 1;
     }
+    std::cout << "send function succeded\n";
 
     closesocket(acceptSocket);
     closesocket(listenSocket);

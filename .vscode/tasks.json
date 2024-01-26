@@ -10,7 +10,8 @@
                 "${file}",
                 "-o",
                 "${fileWorkspaceFolder}\\out\\${fileBasenameNoExtension}.exe",
-                "-lwsock32"
+                "-lwsock32",
+                "-lucrtbase"
             ],
             "options": {
                 "cwd": "${fileDirname}"
